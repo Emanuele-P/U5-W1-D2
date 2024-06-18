@@ -12,6 +12,7 @@ public class Table {
     private int number;
     private int covers;
     private ReservationStatus reservation;
+    private double coverCharge;
 
     @Override
     public String toString() {

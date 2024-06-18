@@ -1,17 +1,18 @@
-package ep2024.u5w1d2;
+package ep2024.u5w1d2.entities;
 
-import ep2024.u5w1d2.entities.Drink;
-import ep2024.u5w1d2.entities.Menu;
-import ep2024.u5w1d2.entities.Pizza;
-import ep2024.u5w1d2.entities.Topping;
+import ep2024.u5w1d2.enums.ReservationStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
-public class BeansConfig {
+@PropertySource("application.properties")
+public class AppConfig {
 
     @Bean
     @Primary
@@ -104,10 +105,61 @@ public class BeansConfig {
         return new Topping("Onions", 0.5, 20);
     }
 
-
-    @Bean
-    public Menu getMenu() {
-        return new Menu(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    @Bean("pizzas")
+    List<Pizza> pizzaList() {
+        List<Pizza> pizzas = new ArrayList<>();
+        pizzas.add(getMargherita());
+        pizzas.add(getHawaiian());
+        pizzas.add(getFourCheese());
+        pizzas.add(getSalami());
+        pizzas.add(getPepperoni());
+        pizzas.add(getVegetarian());
+        return pizzas;
     }
 
+    @Bean("toppings")
+    List<Topping> toppingList() {
+        List<Topping> toppings = new ArrayList<>();
+        toppings.add(getHam());
+        toppings.add(getSalamiTopping());
+        toppings.add(getPineapple());
+        toppings.add(getOnions());
+        toppings.add(getMozzarella());
+        return toppings;
+    }
+
+    @Bean("drinks")
+    List<Drink> drinkList() {
+        List<Drink> drinks = new ArrayList<>();
+        drinks.add(getWater());
+        drinks.add(getWine());
+        drinks.add(getCola());
+        drinks.add(getLemonade());
+        return drinks;
+    }
+
+    @Bean
+    public Menu menu() {
+        return new Menu(pizzaList(), toppingList(), drinkList());
+    }
+
+    @Bean("table_one")
+    Table getTable1(@Value("${seat.price}") double seatPrice) {
+        return new Table(1, 6, ReservationStatus.FREE, seatPrice);
+    }
+
+    @Bean("table_two")
+    Table getTable2(@Value("${seat.price}") double seatPrice) {
+        return new Table(7, 2, ReservationStatus.RESERVED, seatPrice);
+    }
+
+    @Bean("table_three")
+    Table getTable3(@Value("${seat.price}") double seatPrice) {
+        return new Table(4, 4, ReservationStatus.FREE, seatPrice);
+    }
+
+    @Bean("table_four")
+    Table getTable4(@Value("${seat.price}") double seatPrice) {
+        return new Table(10, 8, ReservationStatus.RESERVED, seatPrice);
+    }
 }
